@@ -1,6 +1,7 @@
 const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CleanWebpackPlugin = require('clean-webpack-plugin'); //引入清除文件插件
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'production',
@@ -17,6 +18,24 @@ module.exports = {
       analyzerMode: process.env.npm_config_report ? 'server' : 'disabled'
     }),
     new CleanWebpackPlugin(['dist']),//实例化，参数为目录
+    new HtmlWebpackPlugin({
+      chunks: [
+        'vendors',
+        'index',
+      ],
+      // template: './public/index.html',
+      filename: 'index.html',
+      title: 'index',
+    }),
+    new HtmlWebpackPlugin({
+      chunks: [
+        'vendors',
+        'b',
+      ],
+      // template: './public/index.html',
+      filename: 'b.html',
+      title: 'b',
+    }),
   ],
   optimization: {
     splitChunks: {

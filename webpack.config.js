@@ -1,5 +1,6 @@
 const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const CleanWebpackPlugin = require('clean-webpack-plugin'); //引入清除文件插件
 
 module.exports = {
   mode: 'production',
@@ -12,7 +13,10 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   plugins: [
-    new BundleAnalyzerPlugin()
+    new BundleAnalyzerPlugin({
+      analyzerMode: process.env.npm_config_report ? 'server' : 'disabled'
+    }),
+    new CleanWebpackPlugin(['dist']),//实例化，参数为目录
   ],
   optimization: {
     splitChunks: {
@@ -27,5 +31,33 @@ module.exports = {
         },
       }
     }
-  }
+  },
+  module: {
+    noParse: /^(vue|vue-router|vuex|vuex-router-sync)$/,
+    rules: [
+      /* config.module.rule('images') */
+      {
+        test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 4096,
+              fallback: {
+                loader: 'file-loader',
+                options: {
+                  name: 'img/[name].[hash:8].[ext]'
+                }
+              }
+            }
+          },
+          {
+            loader: 'image-webpack-loader',
+            options: {
+            },
+          },
+        ]
+      },
+    ]
+  },
 };

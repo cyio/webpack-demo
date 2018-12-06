@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import img from './assets/example.jpg'
 
 function getComponent() {
   return import(/* webpackChunkName: "lodash" */ 'lodash').then(({ default: _ }) => {
